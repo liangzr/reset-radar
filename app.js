@@ -11,21 +11,30 @@ async function loadJSON(path) {
   return res.json();
 }
 
+// All day math runs in the configured timezone offset, expressed as UTC-midnight
+// dates whose Y/M/D match that timezone's calendar — so "today" lines up with
+// the tracker owner's local day rather than the viewer's browser timezone.
+function tzOffset() {
+  return (state.config && state.config.timezoneOffsetHours) || 0;
+}
+
 function iso(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+  return d.toISOString().slice(0, 10);
 }
 
 function parseDate(s) {
-  const [y, m, d] = s.split("-").map(Number);
-  return new Date(y, m - 1, d);
+  return new Date(`${s}T00:00:00Z`);
+}
+
+function tzToday() {
+  const shifted = new Date(Date.now() + tzOffset() * 3600000);
+  return new Date(
+    Date.UTC(shifted.getUTCFullYear(), shifted.getUTCMonth(), shifted.getUTCDate()),
+  );
 }
 
 function relTime(dateStr) {
-  const then = parseDate(dateStr);
-  const days = Math.round((Date.now() - then.getTime()) / 86400000);
+  const days = Math.round((tzToday().getTime() - parseDate(dateStr).getTime()) / 86400000);
   if (days <= 0) return "today";
   if (days === 1) return "yesterday";
   if (days < 30) return `${days}d ago`;
@@ -35,7 +44,7 @@ function relTime(dateStr) {
 
 function fmtDate(dateStr) {
   const d = parseDate(dateStr);
-  return `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 }
 
 /* ── data prep ──────────────────────────────────────────────────────── */
@@ -90,11 +99,10 @@ function renderHeatmap() {
   const host = document.getElementById("heatmap");
   host.innerHTML = "";
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = tzToday();
   const start = new Date(today);
-  start.setDate(today.getDate() - 364);
-  start.setDate(start.getDate() - start.getDay()); // back to Sunday
+  start.setUTCDate(today.getUTCDate() - 364);
+  start.setUTCDate(start.getUTCDate() - start.getUTCDay()); // back to Sunday
 
   const weeks = [];
   const cursor = new Date(start);
@@ -102,13 +110,13 @@ function renderHeatmap() {
     const week = [];
     for (let i = 0; i < 7; i++) {
       week.push(cursor <= today ? new Date(cursor) : null);
-      cursor.setDate(cursor.getDate() + 1);
+      cursor.setUTCDate(cursor.getUTCDate() + 1);
     }
     weeks.push(week);
   }
 
   document.getElementById("rangeReadout").textContent =
-    `${MONTHS[start.getMonth()]} ${start.getFullYear()} → now`;
+    `${MONTHS[start.getUTCMonth()]} ${start.getUTCFullYear()} → now`;
 
   // month labels row
   const months = document.createElement("div");
@@ -117,9 +125,9 @@ function renderHeatmap() {
   for (const week of weeks) {
     const span = document.createElement("span");
     const firstReal = week.find(Boolean);
-    if (firstReal && firstReal.getMonth() !== lastMonth) {
-      span.textContent = MONTHS[firstReal.getMonth()];
-      lastMonth = firstReal.getMonth();
+    if (firstReal && firstReal.getUTCMonth() !== lastMonth) {
+      span.textContent = MONTHS[firstReal.getUTCMonth()];
+      lastMonth = firstReal.getUTCMonth();
     }
     months.appendChild(span);
   }
@@ -149,6 +157,7 @@ function renderHeatmap() {
       const evs = eventsOn(key);
       if (evs.length) {
         cell.classList.add("hit");
+        if (evs.some((e) => e.unverified)) cell.classList.add("reported");
         cell.dataset.date = key;
         paintCell(cell, evs);
         cell.addEventListener("mouseenter", showTip);
@@ -189,11 +198,16 @@ function showTip(e) {
   const key = e.currentTarget.dataset.date;
   const evs = eventsOn(key);
   const counts = {};
-  for (const ev of evs) counts[ev.model] = (counts[ev.model] || 0) + 1;
+  const reported = {};
+  for (const ev of evs) {
+    counts[ev.model] = (counts[ev.model] || 0) + 1;
+    if (ev.unverified) reported[ev.model] = true;
+  }
   const rows = Object.entries(counts)
     .map(([m, n]) => {
       const cfg = state.config.models[m];
-      return `<div class="tt-row"><span class="tt-dot" style="background:${cfg.color}"></span>${cfg.label}${n > 1 ? ` ×${n}` : ""}</div>`;
+      const tag = reported[m] ? ' <span class="tt-tag">reported</span>' : "";
+      return `<div class="tt-row"><span class="tt-dot" style="background:${cfg.color}"></span>${cfg.label}${n > 1 ? ` ×${n}` : ""}${tag}</div>`;
     })
     .join("");
   const t = tip();
@@ -228,12 +242,18 @@ function renderLegend() {
     ["conic-gradient(from -45deg, #d97757 0 50%, #4a9eff 50% 100%)", "multiple"],
     ["var(--void)", "no reset"],
   ];
-  host.innerHTML = items
+  const swatches = items
     .map(
       ([bg, label]) =>
         `<span class="legend-item"><span class="legend-sw" style="background:${bg}"></span>${label}</span>`,
     )
     .join("");
+  const reported =
+    `<span class="legend-item"><span class="legend-sw reported"></span>reported (source pending)</span>`;
+  const tz = state.config.timezoneLabel
+    ? `<span class="legend-note">days bucketed in ${state.config.timezoneLabel}</span>`
+    : "";
+  host.innerHTML = swatches + reported + tz;
 }
 
 /* ── signal log ─────────────────────────────────────────────────────── */
@@ -257,11 +277,14 @@ function renderLog() {
   for (const e of evs) {
     const cfg = state.config.models[e.model];
     const li = document.createElement("li");
-    li.className = "log-row";
+    li.className = e.unverified ? "log-row reported" : "log-row";
     li.style.setProperty("--c", cfg.color);
+    const badge = `<span class="badge">${cfg.label}${
+      e.unverified ? '<span class="badge-tag">reported</span>' : ""
+    }</span>`;
     li.innerHTML = `
       <div class="log-date">${fmtDate(e.date)}<span class="rel">${relTime(e.date)}</span></div>
-      <span class="badge">${cfg.label}</span>
+      ${badge}
       <div class="log-text">${escapeHtml(e.text)}</div>
       <a class="log-link" href="${e.url}" target="_blank" rel="noopener">@${e.account} ↗</a>`;
     host.appendChild(li);

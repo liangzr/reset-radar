@@ -1,4 +1,6 @@
 {
+  "timezoneOffsetHours": 8,
+  "timezoneLabel": "UTC+8",
   "models": {
     "claude": {
       "label": "Claude",

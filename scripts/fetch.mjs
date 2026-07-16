@@ -210,9 +210,11 @@ async function fetchAccount(account) {
   return [];
 }
 
-function ymd(d) {
+// Bucket a timestamp into a calendar day at the configured timezone offset,
+// so "today" matches the tracker owner's local calendar rather than UTC.
+function ymd(d, offsetHours = 0) {
   const dt = d instanceof Date && !isNaN(d) ? d : new Date();
-  return dt.toISOString().slice(0, 10);
+  return new Date(dt.getTime() + offsetHours * 3600000).toISOString().slice(0, 10);
 }
 
 function matchKeyword(text, keywords) {
@@ -221,11 +223,11 @@ function matchKeyword(text, keywords) {
   return null;
 }
 
-function eventId(model, post) {
+function eventId(model, post, offset) {
   if (post.statusId) return `${model}-${post.statusId}`;
   // Stable-ish fallback id from date + text hash.
   let h = 0;
-  const s = ymd(post.date) + post.text;
+  const s = ymd(post.date, offset) + post.text;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
   return `${model}-${(h >>> 0).toString(36)}`;
 }
@@ -241,6 +243,7 @@ async function main() {
   const byId = new Map(events.map((e) => [e.id, e]));
 
   const nowIso = new Date().toISOString();
+  const tzOffset = config.timezoneOffsetHours || 0;
   let added = 0;
 
   for (const [model, cfg] of Object.entries(config.models)) {
@@ -249,12 +252,12 @@ async function main() {
     for (const post of posts) {
       const kw = matchKeyword(post.text, config.resetKeywords);
       if (!kw) continue;
-      const id = eventId(model, post);
+      const id = eventId(model, post, tzOffset);
       if (byId.has(id)) continue;
       const ev = {
         id,
         model,
-        date: ymd(post.date),
+        date: ymd(post.date, tzOffset),
         text: post.text.slice(0, 400),
         url: post.url,
         account: cfg.account,

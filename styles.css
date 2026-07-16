@@ -389,6 +389,42 @@ a {
   outline-offset: -1px;
 }
 
+.legend-sw.reported {
+  background: transparent;
+  border: 1px dashed var(--ash-dim);
+  outline: none;
+}
+
+.legend-note {
+  margin-left: auto;
+  color: var(--ash-dim);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+}
+
+/* owner-reported (source link pending) — dashed ring on the heatmap cell */
+.cell.reported {
+  outline: 1px dashed rgba(255, 255, 255, 0.55);
+  outline-offset: 1px;
+}
+
+.badge-tag,
+.tt-tag {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ash);
+  border: 1px dashed var(--ash-dim);
+  border-radius: 4px;
+  padding: 0 4px;
+  margin-left: 6px;
+}
+
+.log-row.reported .log-text {
+  color: var(--ash);
+  font-style: italic;
+}
+
 /* ── signal log ───────────────────────────────────────────────────────── */
 .log {
   list-style: none;
