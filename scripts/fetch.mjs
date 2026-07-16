@@ -238,6 +238,40 @@ function ymd(d, offsetHours = 0) {
   return new Date(dt.getTime() + offsetHours * 3600000).toISOString().slice(0, 10);
 }
 
+const RESET_PROMPT = `You decide if a tweet from an AI company announces a USAGE/RATE-LIMIT RESET.
+reset=true if the tweet states anywhere that usage/rate limits WERE reset, ARE being reset, or WILL be reset by the poster/company — EVEN IF it also talks about milestones, incidents, investigations, or other updates. Trigger phrases: "we've reset","we have reset","we are resetting","resetting ... limits","I have reset","another reset","hard reset","limits will be reset".
+reset=false ONLY when there is no such statement: a question, a hypothetical/negation, merely explaining scheduled reset timing/mechanics, a config rollback (e.g. context size), removing/lifting a limit (not resetting), or an unrelated update (model, pricing, feature, open-source).
+Respond ONLY JSON: {"reset": boolean, "reason": "<=10 words"}.`;
+
+// Semantic gate: ask a LOCAL model (Ollama) whether the tweet actually announces
+// a reset, not just mentions one. Returns true (keep) / false (drop) / null
+// (classifier unavailable → caller falls back to the keyword heuristic).
+async function classifyReset(text, llm) {
+  const url = `${llm.endpoint.replace(/\/$/, "")}/api/chat`;
+  const payload = JSON.stringify({
+    model: llm.model,
+    messages: [
+      { role: "system", content: RESET_PROMPT },
+      { role: "user", content: text },
+    ],
+    stream: false,
+    format: "json",
+    options: { temperature: 0 },
+  });
+  try {
+    const { stdout } = await execFileP(
+      "curl",
+      ["-sS", "--max-time", "40", "--noproxy", "127.0.0.1,localhost",
+       "-H", "content-type: application/json", "-d", payload, url],
+      { maxBuffer: 8 * 1024 * 1024, timeout: 44000 },
+    );
+    const v = JSON.parse(JSON.parse(stdout).message.content);
+    return v.reset === true;
+  } catch {
+    return null;
+  }
+}
+
 function matchKeyword(text, keywords, excludePatterns = []) {
   // Negative guards first: skip questions / hypotheticals ("should we reset?").
   for (const rx of excludePatterns) {
@@ -280,6 +314,16 @@ async function main() {
       const id = eventId(model, post, tzOffset);
       if (byId.has(id)) continue;
       if ((config.ignoreIds || []).includes(id)) continue;
+      if (config.llm && config.llm.enabled) {
+        const verdict = await classifyReset(post.text, config.llm);
+        if (verdict === false) {
+          console.log(`  - [${model}] LLM: not a reset announcement — skipped`);
+          continue;
+        }
+        if (verdict === null) {
+          console.log(`  ! [${model}] LLM unavailable — keyword fallback for ${id}`);
+        }
+      }
       const ev = {
         id,
         model,

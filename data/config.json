@@ -51,5 +51,13 @@
     "do you (think|want)",
     "\\?\\s*$"
   ],
-  "ignoreIds": []
+  "ignoreIds": [
+    "codex-2076495156757577895",
+    "codex-2076365965915467978"
+  ],
+  "llm": {
+    "enabled": true,
+    "endpoint": "http://127.0.0.1:11434",
+    "model": "qwen2.5:14b"
+  }
 }
