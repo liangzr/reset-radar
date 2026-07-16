@@ -38,7 +38,7 @@
           Tracking when <strong>Claude</strong>, <strong>Codex</strong> and
           <strong>Grok</strong> get reset, rolled back or restored. The radar
           reads three announcement channels every hour and lights a cell the day
-          a reset lands.
+          a reset lands. Click any lit day for the details.
         </p>
       </section>
 
@@ -77,6 +77,18 @@
     </footer>
 
     <div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
+
+    <div class="modal" id="modal" hidden>
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalDate">
+        <button class="m-close" data-close aria-label="Close">×</button>
+        <div class="modal-head">
+          <h3 class="m-date" id="modalDate"></h3>
+          <span class="m-count"></span>
+        </div>
+        <div class="m-body"></div>
+      </div>
+    </div>
 
     <script src="app.js"></script>
   </body>

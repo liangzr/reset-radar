@@ -17,6 +17,10 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+
+const execFileP = promisify(execFile);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -36,17 +40,32 @@ const RSS_MIRRORS = [
   "https://nitter.tiekoetter.com/{h}/rss",
 ];
 
+// HTTP GET via curl — curl honours http_proxy/https_proxy env (mihomo/clash),
+// which node's global fetch does NOT, so this is what actually reaches nitter.
+// Returns a minimal fetch-Response-like shim so callers stay unchanged.
 async function timedFetch(url, opts = {}, ms = 12000) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), ms);
+  const args = ["-sS", "--max-time", String(Math.ceil(ms / 1000)), "-A", UA];
+  for (const [k, v] of Object.entries(opts.headers || {})) {
+    if (k.toLowerCase() === "user-agent") continue;
+    args.push("-H", `${k}: ${v}`);
+  }
+  args.push("-w", "\n%{http_code}", url);
   try {
-    return await fetch(url, {
-      ...opts,
-      signal: ctrl.signal,
-      headers: { "user-agent": UA, ...(opts.headers || {}) },
+    const { stdout } = await execFileP("curl", args, {
+      maxBuffer: 20 * 1024 * 1024,
+      timeout: ms + 3000,
     });
-  } finally {
-    clearTimeout(t);
+    const idx = stdout.lastIndexOf("\n");
+    const body = idx >= 0 ? stdout.slice(0, idx) : stdout;
+    const status = parseInt(stdout.slice(idx + 1).trim(), 10) || 0;
+    return {
+      ok: status >= 200 && status < 300,
+      status,
+      text: async () => body,
+      json: async () => JSON.parse(body),
+    };
+  } catch {
+    return { ok: false, status: 0, text: async () => "", json: async () => { throw new Error("curl failed"); } };
   }
 }
 
@@ -260,6 +279,7 @@ async function main() {
       if (!kw) continue;
       const id = eventId(model, post, tzOffset);
       if (byId.has(id)) continue;
+      if ((config.ignoreIds || []).includes(id)) continue;
       const ev = {
         id,
         model,

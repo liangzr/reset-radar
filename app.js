@@ -165,10 +165,17 @@ function renderHeatmap() {
         cell.classList.add("hit");
         if (evs.some((e) => e.unverified)) cell.classList.add("reported");
         cell.dataset.date = key;
+        cell.tabIndex = 0;
+        cell.setAttribute("role", "button");
+        cell.setAttribute("aria-label", `${fmtDate(key)}: ${evs.length} reset(s)`);
         paintCell(cell, evs);
         cell.addEventListener("mouseenter", showTip);
         cell.addEventListener("mousemove", moveTip);
         cell.addEventListener("mouseleave", hideTip);
+        cell.addEventListener("click", () => { hideTip(); openModal(key); });
+        cell.addEventListener("keydown", (ev) => {
+          if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openModal(key); }
+        });
       }
       grid.appendChild(cell);
     }
@@ -235,6 +242,53 @@ function moveTip(e) {
 function hideTip() {
   tip().classList.remove("show");
 }
+
+/* ── day modal ──────────────────────────────────────────────────────── */
+function openModal(dateStr) {
+  const evs = eventsOn(dateStr)
+    .slice()
+    .sort((a, b) => ((a.at || a.date) < (b.at || b.date) ? 1 : -1));
+  if (!evs.length) return;
+  const m = document.getElementById("modal");
+  m.querySelector(".m-date").textContent = fmtDate(dateStr);
+  m.querySelector(".m-count").textContent = `${evs.length} reset${evs.length === 1 ? "" : "s"}`;
+  m.querySelector(".m-body").innerHTML = evs
+    .map((e) => {
+      const cfg = state.config.models[e.model];
+      const tm = fmtTime(e.at);
+      const when = tm ? `${tm} ${state.config.timezoneLabel || ""}`.trim() : "";
+      const tag = e.unverified ? ' <span class="badge-tag">reported</span>' : "";
+      return `<div class="m-item" style="--c:${cfg.color}">
+        <div class="m-item-head">
+          <span class="badge">${cfg.label}${tag}</span>
+          <span class="m-time">${when}</span>
+        </div>
+        <p class="m-text">${escapeHtml(e.text)}</p>
+        <a class="m-link" href="${e.url}" target="_blank" rel="noopener">View on X ↗</a>
+      </div>`;
+    })
+    .join("");
+  m.hidden = false;
+  history.replaceState(null, "", "#day=" + dateStr);
+  requestAnimationFrame(() => m.classList.add("show"));
+  document.body.style.overflow = "hidden";
+  m.querySelector(".m-close").focus();
+}
+
+function closeModal() {
+  const m = document.getElementById("modal");
+  m.classList.remove("show");
+  m.hidden = true;
+  document.body.style.overflow = "";
+  if (location.hash.startsWith("#day=")) history.replaceState(null, "", location.pathname + location.search);
+}
+
+document.addEventListener("click", (e) => {
+  if (e.target.closest("[data-close]")) closeModal();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeModal();
+});
 
 /* ── legend ─────────────────────────────────────────────────────────── */
 function renderLegend() {
@@ -333,6 +387,8 @@ async function init() {
     indexEvents();
     renderSync();
     renderAll();
+    const m = location.hash.match(/^#day=(\d{4}-\d{2}-\d{2})$/);
+    if (m) openModal(m[1]);
   } catch (err) {
     document.getElementById("log").innerHTML =
       `<li class="empty">Couldn't load radar data (${escapeHtml(err.message)}). Try refreshing.</li>`;
