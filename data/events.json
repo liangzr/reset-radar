@@ -1,5 +1,25 @@
 [
   {
+    "id": "claude-2077603834453770467",
+    "model": "claude",
+    "date": "2026-07-16",
+    "text": "We've reset 5-hour and weekly rate limits for all users.",
+    "url": "https://x.com/ClaudeDevs/status/2077603834453770467",
+    "account": "ClaudeDevs",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T06:00:00Z"
+  },
+  {
+    "id": "codex-2077607697487188198",
+    "model": "codex",
+    "date": "2026-07-16",
+    "text": "Another reset for our Codex and ChatGPT Work users. Actually hit 9M active users way earlier today, but then got distracted by the approximately millions of things the team is doing to keep the systems up and reliable. Should have that sweet 100% weekly usage limit back in a few minutes. Go be your productive self and close twitter. Shoo!",
+    "url": "https://x.com/thsottiaux/status/2077607697487188198",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T06:00:00Z"
+  },
+  {
     "id": "grok-2077494535387828644",
     "model": "grok",
     "date": "2026-07-16",
@@ -7,61 +27,17 @@
     "url": "https://x.com/SpaceXAI/status/2077494535387828644",
     "account": "SpaceXAI",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
-    "id": "claude-reported-2026-07-16",
-    "model": "claude",
-    "date": "2026-07-16",
-    "text": "Reset reported by the tracker owner for this day — source tweet link pending.",
-    "url": "https://x.com/ClaudeDevs",
-    "account": "ClaudeDevs",
-    "detectedBy": "owner-reported",
-    "unverified": true,
-    "addedAt": "2026-07-16T05:30:00Z"
-  },
-  {
-    "id": "codex-reported-2026-07-16",
-    "model": "codex",
-    "date": "2026-07-16",
-    "text": "Reset reported by the tracker owner for this day — source tweet link pending.",
-    "url": "https://x.com/thsottiaux",
-    "account": "thsottiaux",
-    "detectedBy": "owner-reported",
-    "unverified": true,
-    "addedAt": "2026-07-16T05:30:00Z"
-  },
-  {
-    "id": "codex-reported-2026-07-15",
+    "id": "codex-2077114635308986427",
     "model": "codex",
     "date": "2026-07-15",
-    "text": "Reset reported by the tracker owner for this day — source tweet link pending.",
-    "url": "https://x.com/thsottiaux",
-    "account": "thsottiaux",
-    "detectedBy": "owner-reported",
-    "unverified": true,
-    "addedAt": "2026-07-16T05:30:00Z"
-  },
-  {
-    "id": "grok-reported-2026-07-15",
-    "model": "grok",
-    "date": "2026-07-15",
-    "text": "Reset reported by the tracker owner for this day — source tweet link pending.",
-    "url": "https://x.com/SpaceXAI",
-    "account": "SpaceXAI",
-    "detectedBy": "owner-reported",
-    "unverified": true,
-    "addedAt": "2026-07-16T05:30:00Z"
-  },
-  {
-    "id": "codex-2075641131002700120",
-    "model": "codex",
-    "date": "2026-07-11",
-    "text": "Hello beautiful people! We have reset usage limits across Codex and ChatGPT Work. And another one will come later in the day. Rejoice. Now that I have your attention, a quick update on ChatGPT Work, Codex and all the updates we shared yesterday. We’ve spent the last 24 hours reading feedback, looking at usage patterns, and talking with many of you. The short version is that there is a *lot* of exc",
-    "url": "https://x.com/thsottiaux/status/2075641131002700120",
+    "text": "Hello. We have reached 8M active users across Codex and ChatGPT Work. We are once again resetting the usage limits for all. And we continue to not have the 5h rate limit as well, allowing everyone to explore the boundaries of GPT-5.6 Sol and discover how ambitious you can be. See you tomorrow for more updates on our growth!",
+    "url": "https://x.com/thsottiaux/status/2077114635308986427",
     "account": "thsottiaux",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
     "id": "codex-2075820987833274448",
@@ -71,7 +47,17 @@
     "url": "https://x.com/thsottiaux/status/2075820987833274448",
     "account": "thsottiaux",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
+  },
+  {
+    "id": "codex-2075641131002700120",
+    "model": "codex",
+    "date": "2026-07-11",
+    "text": "Hello beautiful people! We have reset usage limits across Codex and ChatGPT Work. And another one will come later in the day. Rejoice. Now that I have your attention, a quick update on ChatGPT Work, Codex and all the updates we shared yesterday. We’ve spent the last 24 hours reading feedback, looking at usage patterns, and talking with many of you. The short version is that there is a *lot* of exc",
+    "url": "https://x.com/thsottiaux/status/2075641131002700120",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
     "id": "claude-2075279141352706215",
@@ -81,7 +67,7 @@
     "url": "https://x.com/ClaudeDevs/status/2075279141352706215",
     "account": "ClaudeDevs",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
     "id": "codex-2071740419030053227",
@@ -91,7 +77,7 @@
     "url": "https://x.com/thsottiaux/status/2071740419030053227",
     "account": "thsottiaux",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
     "id": "codex-2071381664853319742",
@@ -101,7 +87,7 @@
     "url": "https://x.com/thsottiaux/status/2071381664853319742",
     "account": "thsottiaux",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
     "id": "claude-2068122937308426676",
@@ -111,7 +97,7 @@
     "url": "https://x.com/ClaudeDevs/status/2068122937308426676",
     "account": "ClaudeDevs",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
     "id": "codex-2062329981548802523",
@@ -121,7 +107,7 @@
     "url": "https://x.com/thsottiaux/status/2062329981548802523",
     "account": "thsottiaux",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
     "id": "grok-2059375342683636066",
@@ -131,7 +117,7 @@
     "url": "https://x.com/SpaceXAI/status/2059375342683636066",
     "account": "SpaceXAI",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
     "id": "codex-2055707616605835333",
@@ -141,7 +127,7 @@
     "url": "https://x.com/thsottiaux/status/2055707616605835333",
     "account": "thsottiaux",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
     "id": "claude-2047371123185287223",
@@ -151,7 +137,7 @@
     "url": "https://x.com/ClaudeDevs/status/2047371123185287223",
     "account": "ClaudeDevs",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   },
   {
     "id": "codex-2042067902392942790",
@@ -161,6 +147,6 @@
     "url": "https://x.com/thsottiaux/status/2042067902392942790",
     "account": "thsottiaux",
     "detectedBy": "keyword: reset",
-    "addedAt": "2026-07-16T05:30:00Z"
+    "addedAt": "2026-07-16T06:00:00Z"
   }
 ]

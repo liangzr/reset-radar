@@ -28,10 +28,10 @@ const UA =
 
 // Nitter/xcancel-style RSS mirrors. Ordered by recent reliability; all optional.
 const RSS_MIRRORS = [
-  "https://xcancel.com/{h}/rss",
   "https://nitter.net/{h}/rss",
+  "https://xcancel.com/{h}/rss",
+  "https://nitter.privacyredirect.com/{h}/rss",
   "https://nitter.poast.org/{h}/rss",
-  "https://nitter.privacydev.net/{h}/rss",
   "https://lightbrd.com/{h}/rss",
   "https://nitter.tiekoetter.com/{h}/rss",
 ];
@@ -75,6 +75,8 @@ function parseRss(xml, account) {
     const pub = (seg.match(/<pubDate>([\s\S]*?)<\/pubDate>/i) || [])[1] || "";
     const text = decodeEntities(rawTitle || rawDesc);
     if (!text) continue;
+    // Skip replies and retweets (nitter prefixes them) — announcements are top-level.
+    if (/^R to @|^RT /.test(text)) continue;
     // Normalize the nitter link to a canonical x.com status URL when possible.
     let url = link.trim();
     const m = url.match(/status\/(\d+)/);
@@ -217,7 +219,11 @@ function ymd(d, offsetHours = 0) {
   return new Date(dt.getTime() + offsetHours * 3600000).toISOString().slice(0, 10);
 }
 
-function matchKeyword(text, keywords) {
+function matchKeyword(text, keywords, excludePatterns = []) {
+  // Negative guards first: skip questions / hypotheticals ("should we reset?").
+  for (const rx of excludePatterns) {
+    try { if (new RegExp(rx, "i").test(text)) return null; } catch {}
+  }
   const low = text.toLowerCase();
   for (const k of keywords) if (low.includes(k.toLowerCase())) return k;
   return null;
@@ -250,7 +256,7 @@ async function main() {
     console.log(`Fetching @${cfg.account} (${model})…`);
     const posts = await fetchAccount(cfg.account);
     for (const post of posts) {
-      const kw = matchKeyword(post.text, config.resetKeywords);
+      const kw = matchKeyword(post.text, config.resetKeywords, config.excludePatterns);
       if (!kw) continue;
       const id = eventId(model, post, tzOffset);
       if (byId.has(id)) continue;

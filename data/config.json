@@ -40,5 +40,15 @@
     "fixed the",
     "degradation",
     "degraded"
+  ],
+  "excludePatterns": [
+    "should we",
+    "about to",
+    "thinking i",
+    "but no",
+    "planning to",
+    "considering",
+    "do you (think|want)",
+    "\\?\\s*$"
   ]
 }
