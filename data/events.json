@@ -44,6 +44,50 @@
     "addedAt": "2026-07-16T06:00:00Z"
   },
   {
+    "id": "codex-2076735790567338203",
+    "model": "codex",
+    "date": "2026-07-14",
+    "at": "2026-07-13T18:29:31.000Z",
+    "text": "Thank you to the 7M active users who are now using Codex and ChatGPT Work. We have added a banked reset to everyone's account to celebrate the milestone. You can apply the reset in the desktop app or on web and it will replenish the weekly usage for you. Have fun out there.",
+    "url": "https://x.com/thsottiaux/status/2076735790567338203",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T07:56:32.988Z"
+  },
+  {
+    "id": "codex-2076495156757577895",
+    "model": "codex",
+    "date": "2026-07-13",
+    "at": "2026-07-13T02:33:19.000Z",
+    "text": "Updates for Codex and ChatGPT Work users. No nerfing, only good stuff! - We have landed inference optimizations and are passing down savings to all the subscriptions for GPT-5.6 Sol. That should result in around 10% more usage on its own. - We noticed that by changing the context size limit in the product to 372k for GPT-5.6 Sol, up from 272k for GPT-5.5, it resulted in more usage being charged th",
+    "url": "https://x.com/thsottiaux/status/2076495156757577895",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: roll back",
+    "addedAt": "2026-07-16T07:56:32.988Z"
+  },
+  {
+    "id": "codex-2076418567143408112",
+    "model": "codex",
+    "date": "2026-07-13",
+    "at": "2026-07-12T21:28:59.000Z",
+    "text": "Added a banked reset to 500k users of ChatGPT Work and Codex. What’s been happening: - Just released the ability to use a banked reset from web and mobile. Before today you could only do it in the desktop app - Had an issue where less than 10% of users who used a banked reset and it didn’t actually reset. This was during a 2 hour window. - It was hard to find all the exact users where it didn’t ap",
+    "url": "https://x.com/thsottiaux/status/2076418567143408112",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T07:56:32.988Z"
+  },
+  {
+    "id": "codex-2076365965915467978",
+    "model": "codex",
+    "date": "2026-07-13",
+    "at": "2026-07-12T17:59:57.000Z",
+    "text": "Morning. The last 48 hours of Codex and ChatGPT Work have been intense! Three important updates: - Temporarily removing the 5 hour usage limit restriction for all Plus, Business and Pro plans - Rolling out changes that will make GPT 5.6 Sol more efficient across the board and that will be reflected in less usage being used so that it can take you further. Exact impact to be quantified and shared -",
+    "url": "https://x.com/thsottiaux/status/2076365965915467978",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T07:56:32.988Z"
+  },
+  {
     "id": "codex-2075820987833274448",
     "model": "codex",
     "date": "2026-07-11",
