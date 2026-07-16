@@ -53,6 +53,44 @@ function fmtTime(at) {
   return `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`;
 }
 
+/* ── X (Twitter) single-tweet embeds ─────────────────────────────────── */
+let _twttrPromise = null;
+function ensureWidgets() {
+  if (window.twttr && window.twttr.widgets) return Promise.resolve(window.twttr);
+  if (!_twttrPromise) {
+    _twttrPromise = new Promise((resolve) => {
+      const s = document.createElement("script");
+      s.src = "https://platform.twitter.com/widgets.js";
+      s.async = true;
+      s.charset = "utf-8";
+      s.onload = () => resolve(window.twttr || null);
+      s.onerror = () => resolve(null);
+      document.head.appendChild(s);
+    });
+  }
+  return _twttrPromise;
+}
+
+function renderEmbeds(container) {
+  ensureWidgets().then((tw) => {
+    if (tw && tw.widgets) tw.widgets.load(container);
+  });
+}
+
+function tweetId(url) {
+  const m = String(url || "").match(/status\/(\d+)/);
+  return m ? m[1] : null;
+}
+
+// Build a single-tweet embed. Fallback content (our text + link) stays visible
+// until the widget renders — and remains if the tweet was deleted.
+function embedHtml(e) {
+  const id = tweetId(e.url);
+  const fallback = `${escapeHtml(e.text)} — <a href="${e.url}" target="_blank" rel="noopener">@${e.account} ↗</a>`;
+  if (!id) return `<p class="embed-fallback">${fallback}</p>`;
+  return `<blockquote class="twitter-tweet" data-theme="dark" data-dnt="true" data-conversation="none" data-align="left"><a href="https://twitter.com/${e.account}/status/${id}">${fallback}</a></blockquote>`;
+}
+
 /* ── data prep ──────────────────────────────────────────────────────── */
 function indexEvents() {
   state.byDate = new Map();
@@ -252,7 +290,8 @@ function openModal(dateStr) {
   const m = document.getElementById("modal");
   m.querySelector(".m-date").textContent = fmtDate(dateStr);
   m.querySelector(".m-count").textContent = `${evs.length} reset${evs.length === 1 ? "" : "s"}`;
-  m.querySelector(".m-body").innerHTML = evs
+  const body = m.querySelector(".m-body");
+  body.innerHTML = evs
     .map((e) => {
       const cfg = state.config.models[e.model];
       const tm = fmtTime(e.at);
@@ -263,11 +302,11 @@ function openModal(dateStr) {
           <span class="badge">${cfg.label}${tag}</span>
           <span class="m-time">${when}</span>
         </div>
-        <p class="m-text">${escapeHtml(e.text)}</p>
-        <a class="m-link" href="${e.url}" target="_blank" rel="noopener">View on X ↗</a>
+        <div class="embed-slot">${embedHtml(e)}</div>
       </div>`;
     })
     .join("");
+  renderEmbeds(body);
   m.hidden = false;
   history.replaceState(null, "", "#day=" + dateStr);
   requestAnimationFrame(() => m.classList.add("show"));
@@ -334,20 +373,33 @@ function renderLog() {
     return;
   }
 
+  // Lazy-load embeds: inject the blockquote (shows fallback text) for every row,
+  // but only ask the widget script to render one once it scrolls near view.
+  const io = new IntersectionObserver(
+    (entries, obs) => {
+      for (const en of entries) {
+        if (en.isIntersecting) {
+          renderEmbeds(en.target);
+          obs.unobserve(en.target);
+        }
+      }
+    },
+    { rootMargin: "400px 0px" },
+  );
   for (const e of evs) {
     const cfg = state.config.models[e.model];
     const li = document.createElement("li");
-    li.className = e.unverified ? "log-row reported" : "log-row";
+    li.className = e.unverified ? "log-item reported" : "log-item";
     li.style.setProperty("--c", cfg.color);
-    const badge = `<span class="badge">${cfg.label}${
-      e.unverified ? '<span class="badge-tag">reported</span>' : ""
-    }</span>`;
+    const tag = e.unverified ? ' <span class="badge-tag">reported</span>' : "";
     li.innerHTML = `
-      <div class="log-date">${fmtDate(e.date)}<span class="time">${fmtTime(e.at)}</span><span class="rel">${relTime(e.date)}</span></div>
-      ${badge}
-      <div class="log-text">${escapeHtml(e.text)}</div>
-      <a class="log-link" href="${e.url}" target="_blank" rel="noopener">@${e.account} ↗</a>`;
+      <div class="log-meta">
+        <span class="badge">${cfg.label}${tag}</span>
+        <span class="log-when">${fmtDate(e.date)} · ${fmtTime(e.at)} · ${relTime(e.date)}</span>
+      </div>
+      <div class="embed-slot">${embedHtml(e)}</div>`;
     host.appendChild(li);
+    io.observe(li);
   }
 }
 
