@@ -16,7 +16,7 @@ LOG=".refresh.log"
 
 {
   echo "=== $(date -u +%FT%TZ) ==="
-  git pull --rebase --quiet origin main || echo "warn: pull failed"
+  git pull --rebase --autostash --quiet origin main || echo "warn: pull failed"
   node scripts/fetch.mjs || { echo "fetch error"; exit 1; }
   if [ -n "$(git status --porcelain data/events.json)" ]; then
     git add data/events.json
@@ -27,4 +27,4 @@ LOG=".refresh.log"
   else
     echo "no new events"
   fi
-} >> "$LOG" 2>&1
+} 2>&1 | tee -a "$LOG"
