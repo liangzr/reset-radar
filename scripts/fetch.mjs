@@ -246,30 +246,81 @@ Respond ONLY JSON: {"reset": boolean, "reason": "<=10 words"}.`;
 // Semantic gate: ask a LOCAL model (Ollama) whether the tweet actually announces
 // a reset, not just mentions one. Returns true (keep) / false (drop) / null
 // (classifier unavailable → caller falls back to the keyword heuristic).
-async function classifyReset(text, llm) {
-  const url = `${llm.endpoint.replace(/\/$/, "")}/api/chat`;
-  const payload = JSON.stringify({
-    model: llm.model,
-    messages: [
-      { role: "system", content: RESET_PROMPT },
-      { role: "user", content: text },
-    ],
-    stream: false,
-    format: "json",
-    options: { temperature: 0 },
-  });
+function parseVerdict(raw) {
   try {
-    const { stdout } = await execFileP(
-      "curl",
-      ["-sS", "--max-time", "40", "--noproxy", "127.0.0.1,localhost",
-       "-H", "content-type: application/json", "-d", payload, url],
-      { maxBuffer: 8 * 1024 * 1024, timeout: 44000 },
-    );
-    const v = JSON.parse(JSON.parse(stdout).message.content);
-    return v.reset === true;
+    const m = String(raw).match(/\{[\s\S]*\}/);
+    const v = JSON.parse(m ? m[0] : raw);
+    return typeof v.reset === "boolean" ? v.reset : null;
   } catch {
     return null;
   }
+}
+
+// Local Ollama (offline) classifier.
+async function classifyOllama(text, cfg) {
+  const url = `${cfg.endpoint.replace(/\/$/, "")}/api/chat`;
+  const payload = JSON.stringify({
+    model: cfg.model,
+    messages: [{ role: "system", content: RESET_PROMPT }, { role: "user", content: text }],
+    stream: false, format: "json", options: { temperature: 0 },
+  });
+  try {
+    const { stdout } = await execFileP("curl",
+      ["-sS", "--max-time", "40", "--noproxy", "127.0.0.1,localhost",
+       "-H", "content-type: application/json", "-d", payload, url],
+      { maxBuffer: 8 * 1024 * 1024, timeout: 44000 });
+    return parseVerdict(JSON.parse(stdout).message.content);
+  } catch {
+    return null;
+  }
+}
+
+async function minimaxKey() {
+  if (process.env.MINIMAX_API_KEY) return process.env.MINIMAX_API_KEY;
+  try {
+    const { stdout } = await execFileP("pass", ["minimax/key"], { timeout: 10000 });
+    return stdout.trim();
+  } catch {
+    return null;
+  }
+}
+
+// MiniMax-M3 via its Anthropic-compatible API (key from `pass minimax/key`).
+async function classifyMinimax(text, cfg) {
+  const key = await minimaxKey();
+  if (!key) return null;
+  const url = `${cfg.endpoint.replace(/\/$/, "")}/v1/messages`;
+  const payload = JSON.stringify({
+    model: cfg.model, max_tokens: 120,
+    system: RESET_PROMPT, messages: [{ role: "user", content: text }],
+  });
+  try {
+    const { stdout } = await execFileP("curl",
+      ["-sS", "--max-time", "60", "--noproxy", "api.minimaxi.com",
+       "-H", "content-type: application/json", "-H", `authorization: Bearer ${key}`,
+       "-H", "anthropic-version: 2023-06-01", "-d", payload, url],
+      { maxBuffer: 8 * 1024 * 1024, timeout: 64000 });
+    const j = JSON.parse(stdout);
+    return parseVerdict(j.content && j.content[0] && j.content[0].text);
+  } catch {
+    return null;
+  }
+}
+
+// Try the preferred provider, then the other, then give up (null → keyword fallback).
+async function classifyReset(text, llm) {
+  const order = llm.provider === "ollama" ? ["ollama", "minimax"] : ["minimax", "ollama"];
+  for (const p of order) {
+    if (p === "minimax" && llm.minimax) {
+      const r = await classifyMinimax(text, llm.minimax);
+      if (r !== null) return r;
+    }
+    if (p === "ollama" && llm.ollama) {
+      const r = await classifyOllama(text, llm.ollama);
+      if (r !== null) return r;
+    }
+  }
+  return null;
 }
 
 function matchKeyword(text, keywords, excludePatterns = []) {
