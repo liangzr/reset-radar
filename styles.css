@@ -800,3 +800,17 @@ a {
 .embed-fallback a { color: var(--bone); }
 
 .log-item.reported .embed-slot { opacity: 0.92; }
+
+/* X's rendered widget wraps itself in a float:left div, which collapses our
+   container to 0 height and makes cards overlap. Contain + de-float it. */
+.embed-slot {
+  display: flow-root;
+  max-width: 550px;
+}
+.embed-slot .twitter-tweet,
+.embed-slot .twitter-tweet-rendered {
+  float: none !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
