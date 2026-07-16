@@ -1,0 +1,72 @@
+[
+  {
+    "id": "grok-2077494535387828644",
+    "model": "grok",
+    "date": "2026-07-15",
+    "text": "We've open-sourced Grok Build and have reset usage limits for all users. Open sourcing Grok Build allows anyone to support making a reliable and robust harness.",
+    "url": "https://x.com/SpaceXAI/status/2077494535387828644",
+    "account": "SpaceXAI",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T00:00:00Z"
+  },
+  {
+    "id": "codex-2071740419030053227",
+    "model": "codex",
+    "date": "2026-06-29",
+    "text": "Codex usage limits will be fully reset again in the next hour and we will credit one additional reset into your bank for your own usage over the next 24 hours. We investigated reports that Codex usage was being consumed faster than expected.",
+    "url": "https://x.com/thsottiaux/status/2071740419030053227",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T00:00:00Z"
+  },
+  {
+    "id": "codex-2071381664853319742",
+    "model": "codex",
+    "date": "2026-06-28",
+    "text": "As we are still investigating, I have reset everyone's Codex usage limits. This is a hard reset given some users had stacked up to three banked resets already that they can apply on their own schedule.",
+    "url": "https://x.com/thsottiaux/status/2071381664853319742",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T00:00:00Z"
+  },
+  {
+    "id": "codex-2062329981548802523",
+    "model": "codex",
+    "date": "2026-06-04",
+    "text": "Over the last 24 hours we had three separate small incidents that affected Codex reliability. I have reset usage limits for Codex across all paid plans. May the tokens flow again.",
+    "url": "https://x.com/thsottiaux/status/2062329981548802523",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T00:00:00Z"
+  },
+  {
+    "id": "grok-2059375342683636066",
+    "model": "grok",
+    "date": "2026-05-26",
+    "text": "Thank you for all the feedback on the Grok Build Beta. Some of you reported hitting limits quickly. Our team found areas to improve caching, so we've reset Grok Build usage limits for all accounts.",
+    "url": "https://x.com/SpaceXAI/status/2059375342683636066",
+    "account": "SpaceXAI",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T00:00:00Z"
+  },
+  {
+    "id": "claude-2047371123185287223",
+    "model": "claude",
+    "date": "2026-04-23",
+    "text": "Over the past month, some of you reported Claude Code's quality had slipped. We investigated, and published a post-mortem on the three issues we found. All are fixed in v2.1.116+ and we've reset usage limits for all subscribers.",
+    "url": "https://x.com/ClaudeDevs/status/2047371123185287223",
+    "account": "ClaudeDevs",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T00:00:00Z"
+  },
+  {
+    "id": "codex-2042067902392942790",
+    "model": "codex",
+    "date": "2026-04-09",
+    "text": "I realize yesterday's Codex reset came in a bit at an unfortunate time given the last one was almost perfectly a week ago. To really celebrate the 3M I'll reset again tomorrow. Thanks for the feedback!",
+    "url": "https://x.com/thsottiaux/status/2042067902392942790",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T00:00:00Z"
+  }
+]

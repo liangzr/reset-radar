@@ -1,0 +1,42 @@
+{
+  "models": {
+    "claude": {
+      "label": "Claude",
+      "account": "ClaudeDevs",
+      "color": "#d97757",
+      "colorSoft": "#e8a48a"
+    },
+    "codex": {
+      "label": "Codex",
+      "account": "thsottiaux",
+      "color": "#10a37f",
+      "colorSoft": "#5fc9a6"
+    },
+    "grok": {
+      "label": "Grok",
+      "account": "spacexai",
+      "color": "#4a9eff",
+      "colorSoft": "#8fc0ff"
+    }
+  },
+  "resetKeywords": [
+    "reset",
+    "rolled back",
+    "roll back",
+    "rollback",
+    "reverted",
+    "revert",
+    "restored",
+    "restore",
+    "back to normal",
+    "back online",
+    "re-enabled",
+    "recovered",
+    "resolved",
+    "mitigated",
+    "fix is live",
+    "fixed the",
+    "degradation",
+    "degraded"
+  ]
+}

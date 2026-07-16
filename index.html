@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reset Radar — Claude · Codex · Grok reset tracker</title>
+    <meta
+      name="description"
+      content="A status board tracking when Claude, Codex and Grok get reset, rolled back or restored — as a contribution-style heatmap plus a live signal log."
+    />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="live" id="liveDot" title="Auto-synced hourly"></span>
+        <span class="wordmark">RESET<span class="wordmark-dot">·</span>RADAR</span>
+      </div>
+      <div class="sync" id="syncReadout">
+        <span class="sync-label">LAST SYNC</span>
+        <span class="sync-time" id="syncTime">—</span>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="lede">
+        <h1>Are they resetting again?</h1>
+        <p>
+          Tracking when <strong>Claude</strong>, <strong>Codex</strong> and
+          <strong>Grok</strong> get reset, rolled back or restored. The radar
+          reads three announcement channels every hour and lights a cell the day
+          a reset lands.
+        </p>
+      </section>
+
+      <section class="channels" id="channels" aria-label="Channels">
+        <!-- channel cards injected -->
+      </section>
+
+      <section class="panel heatmap-panel" aria-label="Reset heatmap">
+        <div class="panel-head">
+          <h2>Reset timeline</h2>
+          <div class="range" id="rangeReadout">last 12 months</div>
+        </div>
+        <div class="heatmap-scroll">
+          <div class="heatmap" id="heatmap"><!-- grid injected --></div>
+        </div>
+        <div class="legend" id="legend"><!-- legend injected --></div>
+      </section>
+
+      <section class="panel log-panel" aria-label="Signal log">
+        <div class="panel-head">
+          <h2>Signal log</h2>
+          <div class="count" id="logCount"></div>
+        </div>
+        <ol class="log" id="log"><!-- log injected --></ol>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span
+        >Reads <a href="https://x.com/ClaudeDevs">@ClaudeDevs</a>,
+        <a href="https://x.com/thsottiaux">@thsottiaux</a>,
+        <a href="https://x.com/spacexai">@spacexai</a> hourly · keyword-detected,
+        may miss or misfire</span
+      >
+      <a href="https://github.com/liangzr/reset-radar" class="foot-src">source</a>
+    </footer>
+
+    <div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

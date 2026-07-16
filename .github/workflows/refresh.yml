@@ -1,0 +1,44 @@
+name: Refresh reset events
+
+on:
+  schedule:
+    - cron: "0 * * * *" # hourly (UTC; GitHub may delay under load)
+  workflow_dispatch: {}
+
+# Allow the workflow to commit the refreshed data back to the branch.
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Fetch and detect resets
+        env:
+          # Optional: set a free Jina reader key (Settings → Secrets) for
+          # reliable timeline reads. Without it the fetch is best-effort.
+          JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
+        run: node scripts/fetch.mjs
+
+      - name: Commit if changed
+        run: |
+          if [ -n "$(git status --porcelain data/events.json)" ]; then
+            git config user.name "reset-radar-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/events.json
+            git commit -m "chore: refresh reset events [skip ci]"
+            git push
+            echo "committed new events"
+          else
+            echo "no new events"
+          fi
