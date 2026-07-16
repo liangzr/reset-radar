@@ -453,6 +453,13 @@ a {
   white-space: nowrap;
 }
 
+.log-date .time {
+  display: block;
+  color: var(--ash);
+  font-size: 11px;
+  margin-top: 3px;
+}
+
 .log-date .rel {
   display: block;
   color: var(--ash-dim);

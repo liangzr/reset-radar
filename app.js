@@ -47,6 +47,12 @@ function fmtDate(dateStr) {
   return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 }
 
+function fmtTime(at) {
+  if (!at) return "";
+  const d = new Date(new Date(at).getTime() + tzOffset() * 3600000);
+  return `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`;
+}
+
 /* ── data prep ──────────────────────────────────────────────────────── */
 function indexEvents() {
   state.byDate = new Map();
@@ -197,17 +203,15 @@ const tip = () => document.getElementById("tooltip");
 function showTip(e) {
   const key = e.currentTarget.dataset.date;
   const evs = eventsOn(key);
-  const counts = {};
-  const reported = {};
-  for (const ev of evs) {
-    counts[ev.model] = (counts[ev.model] || 0) + 1;
-    if (ev.unverified) reported[ev.model] = true;
-  }
-  const rows = Object.entries(counts)
-    .map(([m, n]) => {
-      const cfg = state.config.models[m];
-      const tag = reported[m] ? ' <span class="tt-tag">reported</span>' : "";
-      return `<div class="tt-row"><span class="tt-dot" style="background:${cfg.color}"></span>${cfg.label}${n > 1 ? ` ×${n}` : ""}${tag}</div>`;
+  const ordered = evs
+    .slice()
+    .sort((a, b) => ((a.at || a.date) < (b.at || b.date) ? 1 : -1));
+  const rows = ordered
+    .map((ev) => {
+      const cfg = state.config.models[ev.model];
+      const tag = ev.unverified ? ' <span class="tt-tag">reported</span>' : "";
+      const tm = fmtTime(ev.at);
+      return `<div class="tt-row"><span class="tt-dot" style="background:${cfg.color}"></span>${cfg.label}${tm ? ` · ${tm}` : ""}${tag}</div>`;
     })
     .join("");
   const t = tip();
@@ -260,7 +264,9 @@ function renderLegend() {
 function renderLog() {
   const host = document.getElementById("log");
   const count = document.getElementById("logCount");
-  const evs = [...activeEvents()].sort((a, b) => (a.date < b.date ? 1 : -1));
+  const evs = [...activeEvents()].sort((a, b) =>
+    (a.at || a.date) < (b.at || b.date) ? 1 : -1,
+  );
   count.textContent = `${evs.length} event${evs.length === 1 ? "" : "s"}`;
   host.innerHTML = "";
 
@@ -283,7 +289,7 @@ function renderLog() {
       e.unverified ? '<span class="badge-tag">reported</span>' : ""
     }</span>`;
     li.innerHTML = `
-      <div class="log-date">${fmtDate(e.date)}<span class="rel">${relTime(e.date)}</span></div>
+      <div class="log-date">${fmtDate(e.date)}<span class="time">${fmtTime(e.at)}</span><span class="rel">${relTime(e.date)}</span></div>
       ${badge}
       <div class="log-text">${escapeHtml(e.text)}</div>
       <a class="log-link" href="${e.url}" target="_blank" rel="noopener">@${e.account} ↗</a>`;

@@ -264,6 +264,7 @@ async function main() {
         id,
         model,
         date: ymd(post.date, tzOffset),
+        at: post.date && !isNaN(post.date) ? post.date.toISOString() : null,
         text: post.text.slice(0, 400),
         url: post.url,
         account: cfg.account,
