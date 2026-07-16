@@ -121,6 +121,17 @@
     "addedAt": "2026-07-16T06:00:00Z"
   },
   {
+    "id": "claude-2072429181565288665",
+    "model": "claude",
+    "date": "2026-07-02",
+    "at": "2026-07-01T21:16:00.000Z",
+    "text": "Now that Fable 5 is ready to build (again), we've reset everyone's 5-hour and weekly rate limits.",
+    "url": "https://x.com/ClaudeDevs/status/2072429181565288665",
+    "account": "ClaudeDevs",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T08:00:00Z"
+  },
+  {
     "id": "codex-2071740419030053227",
     "model": "codex",
     "date": "2026-06-30",
@@ -163,6 +174,17 @@
     "account": "thsottiaux",
     "detectedBy": "keyword: reset",
     "addedAt": "2026-07-16T06:00:00Z"
+  },
+  {
+    "id": "claude-2061501787769893055",
+    "model": "claude",
+    "date": "2026-06-02",
+    "at": "2026-06-01T17:35:00.000Z",
+    "text": "We've reset 5-hour and weekly rate limits for all users on Pro and Max plans. We fixed an issue that caused some Claude Code sessions to spawn excessive parallel subagents, burning through usage faster than expected.",
+    "url": "https://x.com/ClaudeDevs/status/2061501787769893055",
+    "account": "ClaudeDevs",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-16T08:00:00Z"
   },
   {
     "id": "grok-2059375342683636066",
