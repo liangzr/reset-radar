@@ -42,3 +42,5 @@ jobs:
           else
             echo "no new events"
           fi
+
+# managed by reset-radar
