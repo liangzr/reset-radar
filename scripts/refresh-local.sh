@@ -18,13 +18,15 @@ LOG=".refresh.log"
   echo "=== $(date -u +%FT%TZ) ==="
   git pull --rebase --autostash --quiet origin main || echo "warn: pull failed"
   node scripts/fetch.mjs || { echo "fetch error"; exit 1; }
-  if [ -n "$(git status --porcelain data/events.json)" ]; then
-    git add data/events.json
+  # status.json carries a fresh lastCheckedAt every run, so this commits (and
+  # redeploys Pages) each hour — that's how the page's "last sync" time advances.
+  git add data/events.json data/status.json
+  if ! git diff --cached --quiet; then
     git -c user.name="reset-radar-bot" \
         -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
         commit -q -m "chore: refresh reset events [skip ci]"
-    if git push -q origin main; then echo "pushed new events"; else echo "warn: push failed"; fi
+    if git push -q origin main; then echo "pushed refresh"; else echo "warn: push failed"; fi
   else
-    echo "no new events"
+    echo "no changes"
   fi
 } 2>&1 | tee -a "$LOG"

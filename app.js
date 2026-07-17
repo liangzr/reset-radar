@@ -3,7 +3,7 @@
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const WEEKDAYS = ["", "Mon", "", "Wed", "", "Fri", ""];
 
-const state = { config: null, events: [], byDate: new Map(), filter: null };
+const state = { config: null, events: [], byDate: new Map(), filter: null, status: null };
 
 async function loadJSON(path) {
   const res = await fetch(path, { cache: "no-store" });
@@ -410,14 +410,18 @@ function escapeHtml(s) {
 /* ── sync readout ───────────────────────────────────────────────────── */
 function renderSync() {
   const el = document.getElementById("syncTime");
+  // Prefer the refresher's last-checked stamp (advances every loop run, even when
+  // no new reset landed); fall back to the newest event stamp for older data.
   const stamps = state.events.map((e) => e.addedAt).filter(Boolean).sort();
-  const latest = stamps[stamps.length - 1];
+  const latest = (state.status && state.status.lastCheckedAt) || stamps[stamps.length - 1];
   if (!latest) {
     el.textContent = "no data";
     return;
   }
-  const d = new Date(latest);
-  el.textContent = `${iso(d)} ${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")} UTC`;
+  // Show in the tracker's configured timezone, like the modal/legend — not UTC.
+  const d = new Date(new Date(latest).getTime() + tzOffset() * 3600000);
+  const label = state.config.timezoneLabel ? ` ${state.config.timezoneLabel}` : "";
+  el.textContent = `${iso(d)} ${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}${label}`;
 }
 
 /* ── orchestration ──────────────────────────────────────────────────── */
@@ -430,12 +434,14 @@ function renderAll() {
 
 async function init() {
   try {
-    const [config, events] = await Promise.all([
+    const [config, events, status] = await Promise.all([
       loadJSON("data/config.json"),
       loadJSON("data/events.json"),
+      loadJSON("data/status.json").catch(() => null),
     ]);
     state.config = config;
     state.events = Array.isArray(events) ? events : [];
+    state.status = status;
     indexEvents();
     renderSync();
     renderAll();

@@ -401,6 +401,12 @@ async function main() {
     return;
   }
   await writeFile(join(DATA, "events.json"), JSON.stringify(events, null, 2) + "\n");
+  // Record when the radar last completed a check, so the page can show a fresh
+  // "last sync" time every run — even when no new reset was detected.
+  await writeFile(
+    join(DATA, "status.json"),
+    JSON.stringify({ lastCheckedAt: nowIso }, null, 2) + "\n",
+  );
 }
 
 main().catch((e) => {
