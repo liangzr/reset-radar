@@ -88,7 +88,8 @@ function embedHtml(e) {
   const id = tweetId(e.url);
   const fallback = `${escapeHtml(e.text)} — <a href="${e.url}" target="_blank" rel="noopener">@${e.account} ↗</a>`;
   if (!id) return `<p class="embed-fallback">${fallback}</p>`;
-  return `<blockquote class="twitter-tweet" data-theme="dark" data-dnt="true" data-conversation="none" data-align="left"><a href="https://twitter.com/${e.account}/status/${id}">${fallback}</a></blockquote>`;
+  const theme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  return `<blockquote class="twitter-tweet" data-theme="${theme}" data-dnt="true" data-conversation="none" data-align="left"><a href="https://twitter.com/${e.account}/status/${id}">${fallback}</a></blockquote>`;
 }
 
 /* ── data prep ──────────────────────────────────────────────────────── */
@@ -433,6 +434,34 @@ function renderAll() {
   renderLog();
 }
 
+/* ── theme ──────────────────────────────────────────────────────────────
+   The <head> inline script has already stamped data-theme from the stored
+   choice or the system preference. Here we wire the toggle (which records an
+   explicit choice) and keep following the system while no choice is stored. */
+function initTheme() {
+  const root = document.documentElement;
+  const KEY = "rr-theme";
+  const mq = matchMedia("(prefers-color-scheme: light)");
+  const stored = () => {
+    try { return localStorage.getItem(KEY); } catch { return null; }
+  };
+  const systemTheme = () => (mq.matches ? "light" : "dark");
+  if (root.dataset.theme !== "light" && root.dataset.theme !== "dark") {
+    root.dataset.theme = stored() || systemTheme();
+  }
+  const btn = document.getElementById("themeToggle");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const next = root.dataset.theme === "light" ? "dark" : "light";
+      root.dataset.theme = next;
+      try { localStorage.setItem(KEY, next); } catch {}
+    });
+  }
+  mq.addEventListener("change", () => {
+    if (!stored()) root.dataset.theme = systemTheme();
+  });
+}
+
 async function init() {
   try {
     const [config, events, status] = await Promise.all([
@@ -455,4 +484,5 @@ async function init() {
   }
 }
 
+initTheme();
 init();

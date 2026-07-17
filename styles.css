@@ -16,9 +16,53 @@
   --void: #1e222b;
   --radius: 10px;
 
+  /* theme-sensitive surfaces (dark defaults; overridden by [data-theme="light"]) */
+  --bar-bg: rgba(20, 22, 28, 0.82);
+  --scanline: rgba(255, 255, 255, 0.012);
+  --scanline-blend: overlay;
+  --hairline: rgba(255, 255, 255, 0.04);
+  --cell-reported-ring: rgba(255, 255, 255, 0.55);
+  --tooltip-bg: #0e0f14;
+  --backdrop: rgba(8, 9, 12, 0.72);
+  --prose: #cfd3de;
+  --shadow-modal: 0 30px 80px -30px rgba(0, 0, 0, 0.85);
+  --shadow-tip: 0 16px 40px -20px rgba(0, 0, 0, 0.8);
+  --glow-a: rgba(74, 158, 255, 0.06);
+  --glow-b: rgba(217, 119, 87, 0.05);
+
   --mono: "IBM Plex Mono", ui-monospace, monospace;
   --sans: "IBM Plex Sans", system-ui, sans-serif;
   --display: "Space Grotesk", var(--sans);
+}
+
+/* ── light theme ──────────────────────────────────────────────────────────
+   JS resolves the active theme (stored choice, else system) and stamps
+   data-theme on <html>; these tokens override the dark defaults above.
+   Model accent colors are intentionally shared across both themes. */
+:root[data-theme="light"] {
+  --ink: #f5f6f8;
+  --slate: #ffffff;
+  --slate-2: #eef0f4;
+  --grid: #e2e5ec;
+  --grid-soft: #eceef3;
+  --bone: #171a21;
+  --ash: #5a6172;
+  --ash-dim: #8b92a3;
+
+  --void: #e7e9ee;
+
+  --bar-bg: rgba(245, 246, 248, 0.82);
+  --scanline: rgba(0, 0, 0, 0.02);
+  --scanline-blend: multiply;
+  --hairline: rgba(0, 0, 0, 0.08);
+  --cell-reported-ring: rgba(0, 0, 0, 0.45);
+  --tooltip-bg: #ffffff;
+  --backdrop: rgba(23, 26, 33, 0.32);
+  --prose: #3a3f4c;
+  --shadow-modal: 0 30px 80px -30px rgba(23, 26, 40, 0.28);
+  --shadow-tip: 0 16px 40px -20px rgba(23, 26, 40, 0.22);
+  --glow-a: rgba(74, 158, 255, 0.05);
+  --glow-b: rgba(217, 119, 87, 0.05);
 }
 
 * {
@@ -27,6 +71,11 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
@@ -38,8 +87,9 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   background-image:
-    radial-gradient(900px 500px at 80% -10%, rgba(74, 158, 255, 0.06), transparent),
-    radial-gradient(700px 400px at -5% 5%, rgba(217, 119, 87, 0.05), transparent);
+    radial-gradient(900px 500px at 80% -10%, var(--glow-a), transparent),
+    radial-gradient(700px 400px at -5% 5%, var(--glow-b), transparent);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 a {
@@ -54,12 +104,12 @@ a {
   z-index: 100;
   background: repeating-linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.012) 0px,
-    rgba(255, 255, 255, 0.012) 1px,
+    var(--scanline) 0px,
+    var(--scanline) 1px,
     transparent 1px,
     transparent 3px
   );
-  mix-blend-mode: overlay;
+  mix-blend-mode: var(--scanline-blend);
 }
 
 /* ── top bar ──────────────────────────────────────────────────────────── */
@@ -73,7 +123,7 @@ a {
   border-bottom: 1px solid var(--grid);
   position: sticky;
   top: 0;
-  background: rgba(20, 22, 28, 0.82);
+  background: var(--bar-bg);
   backdrop-filter: blur(10px);
   z-index: 50;
 }
@@ -128,6 +178,52 @@ a {
 
 .sync-time {
   color: var(--ash);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--grid);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ash);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--bone);
+  border-color: var(--ash-dim);
+}
+
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* show the icon for the theme you'd switch TO */
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  display: block;
+}
+
+:root[data-theme="light"] .theme-toggle .icon-moon {
+  display: block;
 }
 
 /* ── layout shell ─────────────────────────────────────────────────────── */
@@ -340,7 +436,7 @@ a {
   height: 13px;
   border-radius: 3px;
   background: var(--void);
-  outline: 1px solid rgba(255, 255, 255, 0.02);
+  outline: 1px solid var(--hairline);
   outline-offset: -1px;
   transition: transform 0.1s ease;
 }
@@ -385,7 +481,7 @@ a {
   width: 12px;
   height: 12px;
   border-radius: 3px;
-  outline: 1px solid rgba(255, 255, 255, 0.04);
+  outline: 1px solid var(--hairline);
   outline-offset: -1px;
 }
 
@@ -404,7 +500,7 @@ a {
 
 /* owner-reported (source link pending) — dashed ring on the heatmap cell */
 .cell.reported {
-  outline: 1px dashed rgba(255, 255, 255, 0.55);
+  outline: 1px dashed var(--cell-reported-ring);
   outline-offset: 1px;
 }
 
@@ -495,7 +591,7 @@ a {
 
 .log-text {
   font-size: 14.5px;
-  color: #cfd3de;
+  color: var(--prose);
 }
 
 .log-link {
@@ -560,7 +656,7 @@ a {
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 0.12s ease;
-  background: #0e0f14;
+  background: var(--tooltip-bg);
   border: 1px solid var(--grid);
   border-radius: 7px;
   padding: 9px 11px;
@@ -568,7 +664,7 @@ a {
   font-size: 11.5px;
   line-height: 1.5;
   color: var(--bone);
-  box-shadow: 0 16px 40px -20px rgba(0, 0, 0, 0.8);
+  box-shadow: var(--shadow-tip);
   max-width: 240px;
 }
 
@@ -642,7 +738,7 @@ a {
 .modal-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(8, 9, 12, 0.72);
+  background: var(--backdrop);
   backdrop-filter: blur(4px);
   opacity: 0;
   transition: opacity 0.18s ease;
@@ -661,7 +757,7 @@ a {
   border: 1px solid var(--grid);
   border-radius: 14px;
   padding: 24px clamp(18px, 4vw, 28px) 22px;
-  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.85);
+  box-shadow: var(--shadow-modal);
   transform: translateY(8px) scale(0.98);
   opacity: 0;
   transition: transform 0.2s ease, opacity 0.2s ease;
@@ -742,7 +838,7 @@ a {
   margin: 0 0 10px;
   font-size: 14.5px;
   line-height: 1.55;
-  color: #cfd3de;
+  color: var(--prose);
 }
 
 .m-link {
