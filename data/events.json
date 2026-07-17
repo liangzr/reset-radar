@@ -1,5 +1,16 @@
 [
   {
+    "id": "claude-2078211065868091768",
+    "model": "claude",
+    "date": "2026-07-18",
+    "at": "2026-07-17T20:11:44.000Z",
+    "text": "We've resolved an issue where Fable was not selectable as a model within http://Claude.ai or Claude Code for a 30 minute period. You may need to restart Claude Code. If Fable is not your default model afterwards, you should reselect it with /model.",
+    "url": "https://x.com/ClaudeDevs/status/2078211065868091768",
+    "account": "ClaudeDevs",
+    "detectedBy": "keyword: resolved",
+    "addedAt": "2026-07-17T20:55:31.975Z"
+  },
+  {
     "id": "codex-2077607697487188198",
     "model": "codex",
     "date": "2026-07-16",
