@@ -418,10 +418,11 @@ function renderSync() {
     el.textContent = "no data";
     return;
   }
-  // Show in the tracker's configured timezone, like the modal/legend — not UTC.
-  const d = new Date(new Date(latest).getTime() + tzOffset() * 3600000);
-  const label = state.config.timezoneLabel ? ` ${state.config.timezoneLabel}` : "";
-  el.textContent = `${iso(d)} ${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}${label}`;
+  // Render in the viewer's own timezone with no offset label — a plain
+  // "last updated" wall-clock, using local Date getters (not the UTC ones).
+  const d = new Date(latest);
+  const p = (n) => String(n).padStart(2, "0");
+  el.textContent = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
 /* ── orchestration ──────────────────────────────────────────────────── */
