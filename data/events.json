@@ -207,5 +207,27 @@
     "account": "thsottiaux",
     "detectedBy": "keyword: reset",
     "addedAt": "2026-07-16T06:00:00Z"
+  },
+  {
+    "id": "codex-1986166501435711936",
+    "model": "codex",
+    "date": "2025-11-06",
+    "at": "2025-11-05T20:19:29.000Z",
+    "text": "Codex outage resolved.\n\nWe suffered a minor outage for last 45 minutes which turned into a global outage for last 30 minutes, this is now resolved and we have reset the rate limits. Please let me know if you still see issues.",
+    "url": "https://x.com/thsottiaux/status/1986166501435711936",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-17T06:15:06.481Z"
+  },
+  {
+    "id": "codex-1968163721034994139",
+    "model": "codex",
+    "date": "2025-09-17",
+    "at": "2025-09-17T04:02:52.000Z",
+    "text": "We have reset everyone's limits for gpt-5-codex to allow you all to benefit more from it today and as a way to make up for the slowdowns earlier while we were provisioning additional GPUs. We'll continue to add capacity throughout the week to maintain the speed.\n\nEnjoy!",
+    "url": "https://x.com/thsottiaux/status/1968163721034994139",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-17T06:15:06.481Z"
   }
 ]
