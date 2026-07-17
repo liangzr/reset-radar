@@ -3,7 +3,7 @@
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const WEEKDAYS = ["", "Mon", "", "Wed", "", "Fri", ""];
 
-const state = { config: null, events: [], byDate: new Map(), filter: null };
+const state = { config: null, events: [], byDate: new Map(), filter: null, status: null };
 
 async function loadJSON(path) {
   const res = await fetch(path, { cache: "no-store" });
@@ -88,7 +88,8 @@ function embedHtml(e) {
   const id = tweetId(e.url);
   const fallback = `${escapeHtml(e.text)} — <a href="${e.url}" target="_blank" rel="noopener">@${e.account} ↗</a>`;
   if (!id) return `<p class="embed-fallback">${fallback}</p>`;
-  return `<blockquote class="twitter-tweet" data-theme="dark" data-dnt="true" data-conversation="none" data-align="left"><a href="https://twitter.com/${e.account}/status/${id}">${fallback}</a></blockquote>`;
+  const theme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  return `<blockquote class="twitter-tweet" data-theme="${theme}" data-dnt="true" data-conversation="none" data-align="left"><a href="https://twitter.com/${e.account}/status/${id}">${fallback}</a></blockquote>`;
 }
 
 /* ── data prep ──────────────────────────────────────────────────────── */
@@ -410,14 +411,19 @@ function escapeHtml(s) {
 /* ── sync readout ───────────────────────────────────────────────────── */
 function renderSync() {
   const el = document.getElementById("syncTime");
+  // Prefer the refresher's last-checked stamp (advances every loop run, even when
+  // no new reset landed); fall back to the newest event stamp for older data.
   const stamps = state.events.map((e) => e.addedAt).filter(Boolean).sort();
-  const latest = stamps[stamps.length - 1];
+  const latest = (state.status && state.status.lastCheckedAt) || stamps[stamps.length - 1];
   if (!latest) {
     el.textContent = "no data";
     return;
   }
+  // Render in the viewer's own timezone with no offset label — a plain
+  // "last updated" wall-clock, using local Date getters (not the UTC ones).
   const d = new Date(latest);
-  el.textContent = `${iso(d)} ${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")} UTC`;
+  const p = (n) => String(n).padStart(2, "0");
+  el.textContent = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
 /* ── orchestration ──────────────────────────────────────────────────── */
@@ -428,14 +434,44 @@ function renderAll() {
   renderLog();
 }
 
+/* ── theme ──────────────────────────────────────────────────────────────
+   The <head> inline script has already stamped data-theme from the stored
+   choice or the system preference. Here we wire the toggle (which records an
+   explicit choice) and keep following the system while no choice is stored. */
+function initTheme() {
+  const root = document.documentElement;
+  const KEY = "rr-theme";
+  const mq = matchMedia("(prefers-color-scheme: light)");
+  const stored = () => {
+    try { return localStorage.getItem(KEY); } catch { return null; }
+  };
+  const systemTheme = () => (mq.matches ? "light" : "dark");
+  if (root.dataset.theme !== "light" && root.dataset.theme !== "dark") {
+    root.dataset.theme = stored() || systemTheme();
+  }
+  const btn = document.getElementById("themeToggle");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const next = root.dataset.theme === "light" ? "dark" : "light";
+      root.dataset.theme = next;
+      try { localStorage.setItem(KEY, next); } catch {}
+    });
+  }
+  mq.addEventListener("change", () => {
+    if (!stored()) root.dataset.theme = systemTheme();
+  });
+}
+
 async function init() {
   try {
-    const [config, events] = await Promise.all([
+    const [config, events, status] = await Promise.all([
       loadJSON("data/config.json"),
       loadJSON("data/events.json"),
+      loadJSON("data/status.json").catch(() => null),
     ]);
     state.config = config;
     state.events = Array.isArray(events) ? events : [];
+    state.status = status;
     indexEvents();
     renderSync();
     renderAll();
@@ -448,4 +484,5 @@ async function init() {
   }
 }
 
+initTheme();
 init();
