@@ -1,5 +1,16 @@
 [
   {
+    "id": "codex-2079609157934886975",
+    "model": "codex",
+    "date": "2026-07-22",
+    "at": "2026-07-21T16:47:15.000Z",
+    "text": "10M! New day, new usage reset for paid users of Codex and ChatGPT Work. Lands in the next hour. Enjoy.",
+    "url": "https://x.com/thsottiaux/status/2079609157934886975",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-21T17:15:15.306Z"
+  },
+  {
     "id": "claude-2078211065868091768",
     "model": "claude",
     "date": "2026-07-18",
