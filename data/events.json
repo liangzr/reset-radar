@@ -132,6 +132,17 @@
     "addedAt": "2026-07-16T06:00:00Z"
   },
   {
+    "id": "grok-2074915726155211036",
+    "model": "grok",
+    "date": "2026-07-09",
+    "at": "2026-07-08T17:57:13.000Z",
+    "text": "Try Grok 4.5 today in the SpaceXAI console, Grok Build, and Cursor. We've reset all limits so you can start for free https://t.co/bpTHpjivWD\n\nNote: Grok 4.5 isn't available in the EU yet. EU availability is expected later this month.",
+    "url": "https://x.com/spacexai/status/2074915726155211036",
+    "account": "spacexai",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-22T06:15:15.354Z"
+  },
+  {
     "id": "claude-2072429181565288665",
     "model": "claude",
     "date": "2026-07-02",
