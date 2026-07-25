@@ -1,5 +1,16 @@
 [
   {
+    "id": "codex-2081096447718723984",
+    "model": "codex",
+    "date": "2026-07-26",
+    "at": "2026-07-25T19:17:12.000Z",
+    "text": "We have reset usage limits for all Codex and ChatGPT Work users. Last night around 2am to 4am we suffered an almost global outage. All well and recovered, but you know what comes next. We learn. We reset. Enjoy.",
+    "url": "https://x.com/thsottiaux/status/2081096447718723984",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-25T20:15:20.894Z"
+  },
+  {
     "id": "codex-2079609157934886975",
     "model": "codex",
     "date": "2026-07-22",
