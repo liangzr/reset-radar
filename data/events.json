@@ -11,6 +11,17 @@
     "addedAt": "2026-07-29T04:15:20.875Z"
   },
   {
+    "id": "codex-2082326593532473523",
+    "model": "codex",
+    "date": "2026-07-29",
+    "at": "2026-07-29T04:45:22.000Z",
+    "text": "One day we created the reset button and the rest is history.",
+    "url": "https://x.com/thsottiaux/status/2082326593532473523",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-07-29T07:42:23.974Z"
+  },
+  {
     "id": "codex-2081940052154933696",
     "model": "codex",
     "date": "2026-07-28",
