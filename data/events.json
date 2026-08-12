@@ -1,5 +1,27 @@
 [
   {
+    "id": "codex-2087438544323420273",
+    "model": "codex",
+    "date": "2026-08-12",
+    "at": "2026-08-12T07:18:26.000Z",
+    "text": "Why did you switch to Codex? What do you like about it and what could we improve? Don’t say reset.",
+    "url": "https://x.com/thsottiaux/status/2087438544323420273",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-08-12T08:16:38.742Z"
+  },
+  {
+    "id": "codex-2087423996115681767",
+    "model": "codex",
+    "date": "2026-08-12",
+    "at": "2026-08-12T06:20:37.000Z",
+    "text": "I previously promised a reset for every 1M in additional active users for Codex, until 10M. We blew past that and have been silent since 10M. Little surprise for you tomorrow.",
+    "url": "https://x.com/thsottiaux/status/2087423996115681767",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-08-12T08:16:38.742Z"
+  },
+  {
     "id": "codex-2086188036493344823",
     "model": "codex",
     "date": "2026-08-09",
