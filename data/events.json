@@ -418,6 +418,50 @@
     "addedAt": "2026-07-17T06:15:06.481Z"
   },
   {
+    "id": "codex-1986166900322361810",
+    "model": "codex",
+    "date": "2025-11-06",
+    "at": "2025-11-05T20:21:04.000Z",
+    "text": "Edit: This is resolved.\n\nOriginal post: We are seeing elevated system errors for codex and are actively working to resolve.",
+    "url": "https://x.com/thsottiaux/status/1986166900322361810",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: resolved",
+    "addedAt": "2026-08-16T22:19:59.922Z"
+  },
+  {
+    "id": "codex-1984465716888944712",
+    "model": "codex",
+    "date": "2025-11-01",
+    "at": "2025-11-01T03:41:11.000Z",
+    "text": "We promised unprecedented transparency for Codex and to take the reports of degradation seriously, despite seeing incredible growth week over week. \n\nHere is our report and what we have found over the last seven days\nhttps://t.co/lJTCAeFHVQ",
+    "url": "https://x.com/thsottiaux/status/1984465716888944712",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: degradation",
+    "addedAt": "2026-08-16T22:19:59.922Z"
+  },
+  {
+    "id": "codex-1971298655161417937",
+    "model": "codex",
+    "date": "2025-09-26",
+    "at": "2025-09-25T19:39:59.000Z",
+    "text": "Upgrade to the latest Codex CLI 0.41.0 version to see when limits reset by typing /status.\n\nFull release notes at:\nhttps://t.co/tD1poEhd82 https://t.co/kaLypgH6ec",
+    "url": "https://x.com/thsottiaux/status/1971298655161417937",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-08-16T22:19:59.922Z"
+  },
+  {
+    "id": "codex-1969897306725011868",
+    "model": "codex",
+    "date": "2025-09-22",
+    "at": "2025-09-21T22:51:31.000Z",
+    "text": "Nothing too scary, but found an issue in our stack that leads to slightly higher token usage and sometimes degraded performance for gpt-5-codex where it will cause it to answer multiple times or loop a bit. \n\nWe'll push out a fix first thing tomorrow and it will feel even better.",
+    "url": "https://x.com/thsottiaux/status/1969897306725011868",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: degraded",
+    "addedAt": "2026-08-16T22:19:59.922Z"
+  },
+  {
     "id": "codex-1968163721034994139",
     "model": "codex",
     "date": "2025-09-17",
@@ -427,5 +471,16 @@
     "account": "thsottiaux",
     "detectedBy": "keyword: reset",
     "addedAt": "2026-07-17T06:15:06.481Z"
+  },
+  {
+    "id": "codex-1967996885500928459",
+    "model": "codex",
+    "date": "2025-09-17",
+    "at": "2025-09-16T16:59:55.000Z",
+    "text": "Currently serving gpt-5-codex at degraded speeds, about 2X, due to the very high demand. We are finding GPUs left and right to match demand, we'll keep you posted",
+    "url": "https://x.com/thsottiaux/status/1967996885500928459",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: degraded",
+    "addedAt": "2026-08-16T22:19:59.922Z"
   }
 ]
