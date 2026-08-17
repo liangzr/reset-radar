@@ -1,5 +1,16 @@
 [
   {
+    "id": "codex-2089149255382438340",
+    "model": "codex",
+    "date": "2026-08-17",
+    "at": "2026-08-17T00:36:11.000Z",
+    "text": "Codex ✅ Almost 100% reliable ✅ Occasional resets ✅ Open-source ✅ (will have Astra)",
+    "url": "https://x.com/thsottiaux/status/2089149255382438340",
+    "account": "thsottiaux",
+    "detectedBy": "keyword: reset",
+    "addedAt": "2026-08-17T01:13:03.204Z"
+  },
+  {
     "id": "claude-2088014831605702937",
     "model": "claude",
     "date": "2026-08-14",
